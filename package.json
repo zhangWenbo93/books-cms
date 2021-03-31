@@ -4,7 +4,9 @@
   "description": "书籍管理后台系统",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app",
+    "start": "NODE_ENV=production nodemon app"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,17 @@
   "bugs": {
     "url": "https://github.com/zhangWenbo93/books-cms/issues"
   },
-  "homepage": "https://github.com/zhangWenbo93/books-cms#readme"
+  "homepage": "https://github.com/zhangWenbo93/books-cms#readme",
+  "dependencies": {
+    "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
+    "koa-router": "^10.0.0",
+    "koa-static": "^5.0.0",
+    "lodash": "^4.17.21",
+    "module-alias": "^2.2.2",
+    "mysql2": "^2.2.5",
+    "nodemon": "^2.0.7",
+    "sequelize": "^6.6.2",
+    "validator": "^13.5.2"
+  }
 }
