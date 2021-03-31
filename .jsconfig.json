@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@models/*": [
+                "app/models/*"
+            ],
+            "@core/*": [
+                "core/*"
+            ],
+            "@middlewares/*": [
+                "middlewares/*"
+            ],
+            "@validator": [
+                "app/validator/validator.js"
+            ],
+            "@services/*": [
+                "app/services/*"
+            ],
+            "@lib/*": [
+                "app/lib/*"
+            ],
+            "@config": [
+                "config/config.js"
+            ],
+            "@controller/*": [
+                "app/controller/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
