@@ -1,0 +1,19 @@
+{
+  "name": "books-cms",
+  "version": "1.0.0",
+  "description": "书籍管理后台系统",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhangWenbo93/books-cms.git"
+  },
+  "author": "wb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhangWenbo93/books-cms/issues"
+  },
+  "homepage": "https://github.com/zhangWenbo93/books-cms#readme"
+}
