@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const { get } = require('lodash');
 const requireDirectory = require('require-directory');
 
 class InitManager {
