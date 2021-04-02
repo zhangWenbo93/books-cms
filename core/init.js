@@ -19,6 +19,11 @@ class InitManager {
             }
         }
     }
+
+    static initLoadError() {
+        const errors = require('./http-exception');
+        global.errs = errors;
+    }
 }
 
 module.exports = InitManager;
