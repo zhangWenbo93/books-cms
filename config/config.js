@@ -1,8 +1,8 @@
 module.exports = {
     databases: {
-        dbName: 'books',
+        dbName: 'books-cms',
         host: 'localhost',
-        prot: 3309,
+        prot: 3306,
         user: 'root',
         password: '123456',
         dialectOptions: {
@@ -13,4 +13,4 @@ module.exports = {
         secretKey: 'UVxV3T-qwBKr3r?wGOwZ#wI$bjJ394L8oC=b%DIuMP#as_',
         expiresIn: 60 * 60 * 24 * 30
     }
-};
+}

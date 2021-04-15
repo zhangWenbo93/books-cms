@@ -1,9 +1,7 @@
-const Router = require('koa-router');
-const router = new Router({ prefix: '/' });
-const { f } = require('@controller/v1/books');
+const Router = require('koa-router')
+const router = new Router({ prefix: '/v1/book' })
+const { f } = require('@controller/v1/books')
 
-router.get('/', ctx => {
-    ctx.body = f();
-});
+router.get('/', f)
 
-module.exports = router;
+module.exports = router

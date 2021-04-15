@@ -6,10 +6,10 @@
  */
 class HttpException extends Error {
     constructor(msg = '服务器异常', errorCode = 10000, code = 400) {
-        super();
-        this.msg = msg;
-        this.errorCode = errorCode;
-        this.code = code;
+        super()
+        this.msg = msg
+        this.errorCode = errorCode
+        this.code = code
     }
 }
 /**
@@ -20,10 +20,10 @@ class HttpException extends Error {
  */
 class NotFound extends HttpException {
     constructor(msg, errorCode) {
-        super();
-        this.msg = msg || '资源未找到';
-        this.errorCode = errorCode || 10000;
-        this.code = 404;
+        super()
+        this.msg = msg || '资源未找到'
+        this.errorCode = errorCode || 10000
+        this.code = 404
     }
 }
 /**
@@ -34,10 +34,10 @@ class NotFound extends HttpException {
  */
 class ParameterException extends HttpException {
     constructor(msg, errorCode) {
-        super();
-        this.msg = msg || '参数不正确';
-        this.errorCode = errorCode || 10000;
-        this.code = 400;
+        super()
+        this.msg = msg || '参数不正确'
+        this.errorCode = errorCode || 10000
+        this.code = 400
     }
 }
 /**
@@ -48,10 +48,10 @@ class ParameterException extends HttpException {
  */
 class Success extends HttpException {
     constructor(msg, errorCode) {
-        super();
-        this.msg = msg || 'ok';
-        this.errorCode = errorCode || 0;
-        this.code = 201;
+        super()
+        this.msg = msg || 'ok'
+        this.errorCode = errorCode || 0
+        this.code = 201
     }
 }
 /**
@@ -62,10 +62,19 @@ class Success extends HttpException {
  */
 class Forbbiden extends HttpException {
     constructor(msg, errorCode) {
-        super();
-        this.msg = msg || '禁止访问';
-        this.errorCode = errorCode || 10006;
-        this.code = 403;
+        super()
+        this.msg = msg || '禁止访问'
+        this.errorCode = errorCode || 10006
+        this.code = 403
+    }
+}
+
+class AuthFailed extends HttpException {
+    constructor(msg, errorCode) {
+        super()
+        this.msg = msg || '授权失败'
+        this.errorCode = errorCode || 10004
+        this.code = 200
     }
 }
 
@@ -74,5 +83,6 @@ module.exports = {
     NotFound,
     ParameterException,
     Success,
-    Forbbiden
-};
+    Forbbiden,
+    AuthFailed
+}

@@ -1,24 +1,13 @@
 const validator = require('validator')
-const {
-    ParameterException
-} = require('@core/http-exception')
-const {
-    get,
-    last,
-    set,
-    cloneDeep
-} = require("lodash")
-const {
-    findMembers
-} = require('@core/util')
-
+const { ParameterException } = require('@core/http-exception')
+const { get, last, set, cloneDeep } = require('lodash')
+const { findMembers } = require('@core/util')
 
 class LinValidator {
-    constructor () {
+    constructor() {
         this.data = {}
         this.parsed = {}
     }
-
 
     _assembleAllParams(ctx) {
         return {
@@ -78,7 +67,6 @@ class LinValidator {
             }
         }
         if (errorMsgs.length != 0) {
-            console.log(errorMsgs);
             throw new ParameterException(errorMsgs)
         }
         ctx.v = this
@@ -86,8 +74,8 @@ class LinValidator {
     }
 
     async _check(key, alias = {}) {
-        const isCustomFunc = typeof (this[key]) == 'function' ? true : false
-        let result;
+        const isCustomFunc = typeof this[key] == 'function' ? true : false
+        let result
         if (isCustomFunc) {
             try {
                 await this[key](this.data)
@@ -166,7 +154,7 @@ class LinValidator {
 }
 
 class RuleResult {
-    constructor (pass, msg = '') {
+    constructor(pass, msg = '') {
         Object.assign(this, {
             pass,
             msg
@@ -175,14 +163,14 @@ class RuleResult {
 }
 
 class RuleFieldResult extends RuleResult {
-    constructor (pass, msg = '', legalValue = null) {
+    constructor(pass, msg = '', legalValue = null) {
         super(pass, msg)
         this.legalValue = legalValue
     }
 }
 
 class Rule {
-    constructor (name, msg, ...params) {
+    constructor(name, msg, ...params) {
         Object.assign(this, {
             name,
             msg,
@@ -191,8 +179,7 @@ class Rule {
     }
 
     validate(field) {
-        if (this.name == 'isOptional')
-            return new RuleResult(true)
+        if (this.name == 'isOptional') return new RuleResult(true)
         if (!validator[this.name](field + '', ...this.params)) {
             return new RuleResult(false, this.msg || this.message || '参数错误')
         }
@@ -201,7 +188,7 @@ class Rule {
 }
 
 class RuleField {
-    constructor (rules) {
+    constructor(rules) {
         this.rules = rules
     }
 
@@ -263,8 +250,6 @@ class RuleField {
         }
     }
 }
-
-
 
 module.exports = {
     Rule,

@@ -1,7 +1,9 @@
 class BooksCtl {
-    f() {
-        return '这是主页';
+    async f(ctx) {
+        ctx.body = {
+            status: 0
+        }
     }
 }
 
-module.exports = new BooksCtl();
+module.exports = new BooksCtl()

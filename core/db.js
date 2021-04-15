@@ -1,10 +1,10 @@
-const { Sequelize, Model } = require('sequelize');
-const { databases: { dbName, host, prot, user, password } } = require('@config');
+const { Sequelize, Model } = require('sequelize')
+const { databases: { dbName, host, prot, user, password } } = require('@config')
 
 const sequelize = new Sequelize(dbName, user, password, {
     dialect: 'mysql',
     host,
-    port,
+    prot,
     logging: true,
     timezone: '+08:00',
     define: {
@@ -15,10 +15,17 @@ const sequelize = new Sequelize(dbName, user, password, {
                 attributes: {
                     exclude: ['updatedAt', 'deletedAt', 'createdAt']
                 }
-            },
-            timestamps: true
-        }
+            }
+        },
+        timestamps: true
     }
-});
+})
 
-module.exports = { sequelize };
+sequelize.sync(
+    {
+        // 自动删除原来表，重新创建新的表
+        // force: true
+    }
+)
+
+module.exports = { sequelize }
