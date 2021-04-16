@@ -23,7 +23,7 @@ class NotFound extends HttpException {
         super()
         this.msg = msg || '资源未找到'
         this.errorCode = errorCode || 10001
-        this.code = 200
+        this.code = 404
     }
 }
 /**
@@ -37,7 +37,7 @@ class ParameterException extends HttpException {
         super()
         this.msg = msg || '参数不正确'
         this.errorCode = errorCode || 10002
-        this.code = 200
+        this.code = 400
     }
 }
 /**
@@ -51,7 +51,7 @@ class Success extends HttpException {
         super()
         this.msg = msg || 'ok'
         this.errorCode = errorCode || 0
-        this.code = 200
+        this.code = 201
     }
 }
 /**
@@ -74,7 +74,7 @@ class AuthFailed extends HttpException {
         super()
         this.msg = msg || '授权失败'
         this.errorCode = errorCode || 10004
-        this.code = 200
+        this.code = 401
     }
 }
 
