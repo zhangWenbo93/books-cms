@@ -3,19 +3,14 @@ const { security } = require('@config')
 /***
  *
  */
-const findMembers = (instance, {
-    prefix,
-    specifiedType,
-    filter
-}) => {
+const findMembers = (instance, { prefix, specifiedType, filter }) => {
     // 递归函数
     function _find(instance) {
         //基线条件（跳出递归）
-        if (instance.__proto__ === null)
-            return []
+        if (instance.__proto__ === null) return []
 
         let names = Reflect.ownKeys(instance)
-        names = names.filter((name) => {
+        names = names.filter(name => {
             // 过滤掉不满足条件的属性或方法名
             return _shouldKeep(name)
         })
@@ -29,12 +24,8 @@ const findMembers = (instance, {
                 return true
             }
         }
-        if (prefix)
-            if (value.startsWith(prefix))
-                return true
-        if (specifiedType)
-            if (instance[value] instanceof specifiedType)
-                return true
+        if (prefix) if (value.startsWith(prefix)) return true
+        if (specifiedType) if (instance[value] instanceof specifiedType) return true
     }
 
     return _find(instance)
@@ -43,18 +34,31 @@ const findMembers = (instance, {
 const generateToken = (uid, scope) => {
     const secretKey = security.secretKey
     const expiresIn = security.expiresIn
-    const token = jwt.sign({
-        uid,
-        scope
-    }, secretKey, {
-        expiresIn
-    })
+    const token = jwt.sign(
+        {
+            uid,
+            scope
+        },
+        secretKey,
+        {
+            expiresIn
+        }
+    )
     return token
 }
 
+const handleRole = role => {
+    if (+role === 1) {
+        return ['admin']
+    }
 
+    if (+role === 2) {
+        return ['editor']
+    }
+}
 
 module.exports = {
     findMembers,
     generateToken,
+    handleRole
 }

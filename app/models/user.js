@@ -16,6 +16,21 @@ class User extends Model {
         if (!correct) {
             throw new global.errs.AuthFailed('密码不正确')
         }
+
+        return user
+    }
+
+    static async getUserInfo(id, role) {
+        const user = await User.findOne({
+            where: {
+                [Op.and]: { id, role }
+            }
+        })
+
+        if (!user) {
+            throw new global.errs.AuthFailed('用户不存在')
+        }
+
         return user
     }
 }
@@ -37,8 +52,8 @@ User.init(
             }
         },
         role: {
-            type: DataTypes.STRING,
-            defaultValue: 'admin'
+            type: DataTypes.INTEGER,
+            defaultValue: 1
         },
         nickname: DataTypes.STRING,
         avatar: {

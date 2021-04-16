@@ -22,8 +22,8 @@ class NotFound extends HttpException {
     constructor(msg, errorCode) {
         super()
         this.msg = msg || '资源未找到'
-        this.errorCode = errorCode || 10000
-        this.code = 404
+        this.errorCode = errorCode || 10001
+        this.code = 200
     }
 }
 /**
@@ -36,8 +36,8 @@ class ParameterException extends HttpException {
     constructor(msg, errorCode) {
         super()
         this.msg = msg || '参数不正确'
-        this.errorCode = errorCode || 10000
-        this.code = 400
+        this.errorCode = errorCode || 10002
+        this.code = 200
     }
 }
 /**
@@ -51,7 +51,7 @@ class Success extends HttpException {
         super()
         this.msg = msg || 'ok'
         this.errorCode = errorCode || 0
-        this.code = 201
+        this.code = 200
     }
 }
 /**
@@ -65,7 +65,7 @@ class Forbbiden extends HttpException {
         super()
         this.msg = msg || '禁止访问'
         this.errorCode = errorCode || 10006
-        this.code = 403
+        this.code = 200
     }
 }
 

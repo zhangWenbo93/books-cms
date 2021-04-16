@@ -1,5 +1,6 @@
 const { Rule, LinValidator } = require('@core/lin-validator')
 const { User } = require('@models/user')
+const { Authority } = require('@lib/enum')
 class LoginValidator extends LinValidator {
     constructor() {
         super()
@@ -36,6 +37,16 @@ class RegisterValidator extends LinValidator {
         const { password, password2 } = vals.body
         if (password !== password2) {
             throw new global.errs.AuthFailed('两次密码不一致')
+        }
+    }
+
+    validateRole(vals) {
+        const { role } = vals.body
+        if (!role || role === undefined) {
+            return
+        }
+        if (!Object.values(Authority).includes(+role)) {
+            throw new global.errs.AuthFailed('此类权限不存在')
         }
     }
 

@@ -1,4 +1,4 @@
-const { resultType } = require('./enum')
+const { ResultType } = require('./enum')
 
 class Result {
     constructor(data, msg = '操作成功', options) {
@@ -18,7 +18,7 @@ class Result {
 
     createResult() {
         if (!this.code) {
-            this.code = resultType.CODE_SUCCESS
+            this.code = ResultType.CODE_SUCCESS
         }
         let base = {
             code: this.code,
@@ -38,12 +38,12 @@ class Result {
     }
 
     success(ctx) {
-        this.code = resultType.CODE_SUCCESS
+        this.code = ResultType.CODE_SUCCESS
         this.json(ctx)
     }
 
     fail(ctx) {
-        ctx.code = resultType.CODE_ERROR
+        ctx.code = ResultType.CODE_ERROR
         this.json(ctx)
     }
 }
