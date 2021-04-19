@@ -1,7 +1,7 @@
 module.exports = {
     databases: {
         dbName: 'books-cms',
-        host: 'localhost',
+        host: '60.205.207.86',
         prot: 3306,
         user: 'root',
         password: '123456',

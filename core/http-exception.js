@@ -65,7 +65,7 @@ class Forbbiden extends HttpException {
         super()
         this.msg = msg || '禁止访问'
         this.errorCode = errorCode || 10006
-        this.code = 200
+        this.code = 403
     }
 }
 
@@ -78,11 +78,21 @@ class AuthFailed extends HttpException {
     }
 }
 
+class TokenOverdue extends HttpException {
+    constructor(msg, errorCode) {
+        super()
+        this.msg = msg || 'token已过期'
+        this.errorCode = errorCode || 10006
+        this.code = 200
+    }
+}
+
 module.exports = {
     HttpException,
     NotFound,
     ParameterException,
     Success,
     Forbbiden,
-    AuthFailed
+    AuthFailed,
+    TokenOverdue
 }

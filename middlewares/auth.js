@@ -16,7 +16,7 @@ class Auth {
                 decode = jwt.verify(userToken.name, secretKey)
             } catch (error) {
                 if (error.name === 'TokenExpiredError') {
-                    throw new global.errs.Forbbiden('token已过期')
+                    throw new global.errs.TokenOverdue('token已过期')
                 }
             }
 
