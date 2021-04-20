@@ -1,7 +1,8 @@
 const Router = require('koa-router')
 const router = new Router({ prefix: '/v1/book' })
-const { f } = require('@controller/v1/books')
+const { upload } = require('@controller/v1/books')
+const { Auth } = require('@middlewares/auth')
 
-router.get('/', f)
+router.post('/upload', new Auth().m, upload)
 
 module.exports = router

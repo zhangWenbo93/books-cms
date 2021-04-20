@@ -1,5 +1,8 @@
 class BooksCtl {
-    async f(ctx) {
+    async upload(ctx) {
+        console.log('====================================')
+        console.log('ctx', ctx)
+        console.log('====================================')
         ctx.body = {
             status: 0
         }
