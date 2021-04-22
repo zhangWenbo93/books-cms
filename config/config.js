@@ -1,7 +1,12 @@
+function chooseDir() {
+    const isDev = process.env.NODE_ENV !== 'production'
+    return isDev ? '/Users/zhangwenbo' : '/root'
+}
+
 module.exports = {
     databases: {
         dbName: 'books-cms',
-        host: '60.205.207.86',
+        host: 'localhost',
         prot: 3306,
         user: 'root',
         password: '123456',
@@ -12,5 +17,9 @@ module.exports = {
     security: {
         secretKey: 'UVxV3T-qwBKr3r?wGOwZ#wI$bjJ394L8oC=b%DIuMP#as_',
         expiresIn: 60 * 60 * 24 * 30
+    },
+    uploadDir: {
+        booksDir: `${chooseDir()}/upload/admin-upload-ebook/book`,
+        uploadOrigin: 'http://localhost:8089/admin-upload-ebook/book/'
     }
 }
