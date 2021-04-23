@@ -17,7 +17,7 @@ app.use(
     KoaBody({
         multipart: true,
         formidable: {
-            uploadDir: path.resolve('./', booksDir),
+            uploadDir: path.resolve('./', `${booksDir}/book/`),
             keepExtensions: true // 保留拓展名
         }
     })

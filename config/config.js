@@ -1,4 +1,4 @@
-function chooseDir() {
+function envDir() {
     const isDev = process.env.NODE_ENV !== 'production'
     return isDev ? '/Users/zhangwenbo' : '/root'
 }
@@ -19,7 +19,7 @@ module.exports = {
         expiresIn: 60 * 60 * 24 * 30
     },
     uploadDir: {
-        booksDir: `${chooseDir()}/upload/admin-upload-ebook/book`,
-        uploadOrigin: 'http://localhost:8089/admin-upload-ebook/book/'
+        booksDir: `${envDir()}/upload/admin-upload-ebook`,
+        uploadOrigin: 'http://localhost:8089/admin-upload-ebook'
     }
 }
