@@ -15,12 +15,41 @@ Book.init(
             primaryKey: true,
             autoIncrement: true
         },
-        username: DataTypes.STRING
+        fileName: DataTypes.STRING,
+        cover: DataTypes.STRING,
+        title: DataTypes.STRING,
+        author: DataTypes.STRING,
+        publisher: DataTypes.STRING,
+        bookId: DataTypes.STRING,
+        language: DataTypes.STRING,
+        rootFile: DataTypes.STRING,
+        originalName: DataTypes.STRING,
+        path: DataTypes.STRING,
+        filePath: DataTypes.STRING,
+        unzipPath: DataTypes.STRING,
+        coverPath: DataTypes.STRING,
+        createUser: DataTypes.STRING,
+        createDt: {
+            type: DataTypes.DATE,
+            defaultValue: new Date().getTime()
+        },
+        updateDt: {
+            type: DataTypes.DATE,
+            defaultValue: new Date().getTime()
+        },
+        updateType: {
+            type: DataTypes.DATE,
+            defaultValue: new Date().getTime()
+        },
+        updateDt: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        }
     },
     {
         sequelize,
-        tableName: 'book'
-        // timestamps: false
+        tableName: 'book',
+        timestamps: false
     }
 )
 
