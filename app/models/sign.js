@@ -12,7 +12,7 @@ Sign.init(
         },
         openId: DataTypes.STRING,
         create_dt: {
-            type: DataTypes.DATE,
+            type: DataTypes.BIGINT,
             defaultValue: new Date().getTime()
         }
     },

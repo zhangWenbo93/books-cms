@@ -30,18 +30,14 @@ Book.init(
         coverPath: DataTypes.STRING,
         createUser: DataTypes.STRING,
         createDt: {
-            type: DataTypes.DATE,
+            type: DataTypes.BIGINT,
             defaultValue: new Date().getTime()
         },
         updateDt: {
-            type: DataTypes.DATE,
+            type: DataTypes.BIGINT,
             defaultValue: new Date().getTime()
         },
         updateType: {
-            type: DataTypes.DATE,
-            defaultValue: new Date().getTime()
-        },
-        updateDt: {
             type: DataTypes.INTEGER,
             defaultValue: 0
         }

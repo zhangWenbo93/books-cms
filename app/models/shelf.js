@@ -8,7 +8,7 @@ Shelf.init(
         fileName: DataTypes.INSERT,
         openId: DataTypes.STRING,
         date: {
-            type: DataTypes.DATE,
+            type: DataTypes.BIGINT,
             defaultValue: new Date().getTime()
         }
     },

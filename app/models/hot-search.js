@@ -13,7 +13,7 @@ HotSearch.init(
         openId: DataTypes.STRING,
         keyword: DataTypes.STRING,
         create_dt: {
-            type: DataTypes.DATE,
+            type: DataTypes.BIGINT,
             defaultValue: new Date().getTime()
         }
     },

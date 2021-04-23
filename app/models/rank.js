@@ -14,7 +14,7 @@ Rank.init(
         openId: DataTypes.STRING,
         rank: DataTypes.INTEGER,
         create_dt: {
-            type: DataTypes.DATE,
+            type: DataTypes.BIGINT,
             defaultValue: new Date().getTime()
         }
     },
