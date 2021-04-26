@@ -1,14 +1,15 @@
 const { Sequelize, Model, DataTypes, Op } = require('sequelize')
 const fs = require('fs')
 const path = require('path')
-const xml2js = require('xml2js').parseString
 const Epub = require('@core/epub')
 const { sequelize } = require('@core/db')
-const { uploadDir: { booksDir, uploadOrigin } } = require('@config')
+const { EpubParse } = require('@core/epubParse')
+const { generateFile } = require('@core/util')
+const { uploadDir: { uploadPath, uploadUrl } } = require('@config')
 
 class Book extends Model {
     static async addBook(file, data) {
-        const params = Book.createBookFromFile(file)
+        const basicData = Book._createBookFromFile(file)
         // try {
         //     return await Book.create({
         //         fileName: 'name',
@@ -18,24 +19,17 @@ class Book extends Model {
         // } catch (error) {
         //     console.log(error)
         // }
+        const epubData = await EpubParse.parse(file)
+        return { ...basicData, ...epubData }
     }
 
     static async updateBook(data) {
-        const params = Book.createBookFromData(this.data)
+        const basicData = Book._createBookFromData(this.data)
     }
 
-    static createBookFromFile(file) {
-        const basename = path.basename(file.path) // 文件上传名
-        const dirname = path.dirname(file.path) // 本地文件路径
-        const extname = path.extname(file.path) // 后缀
-        const fileName = basename.replace(extname, '') // 文件无后缀的name
-        const url = `${uploadOrigin}/book/${basename}` // 下载URL
-        const unzipPath = `${booksDir}/unzip/${fileName}` // 解压后文件夹路径
-        const unzipUrl = `${uploadOrigin}/unzip/${fileName}` // 解压后文件夹路径URL
-        if (!fs.existsSync(unzipPath)) {
-            fs.mkdirSync(unzipPath, { recursive: true }) // 创建电子书解压后的目录
-        }
-        const createParams = {
+    static _createBookFromFile(file) {
+        const { basename, fileName, url, unzipUrl } = generateFile(file)
+        return {
             fileName: fileName,
             path: `/book/${basename}`, // epub文件相对路径
             filePath: `/book/${basename}`, // epub文件路径
@@ -45,6 +39,7 @@ class Book extends Model {
             publisher: '', // 出版社
             contents: [], // 目录
             cover: '', // 封面图片URL
+            coverPath: '',
             category: -1, // 分类ID
             categoryText: '', // 分类名称
             language: '', // 语种
@@ -52,11 +47,10 @@ class Book extends Model {
             unzipUrl: unzipUrl, // 解压后的电子书链接
             originalName: file.name // 原文件名
         }
-        return createParams
     }
 
-    static createBookFromData(data) {
-        const params = {
+    static _createBookFromData(data) {
+        return {
             fileName: data.fileName,
             cover: data.coverPath,
             title: data.title,
@@ -76,8 +70,6 @@ class Book extends Model {
             updateType: data.updateType === 0 ? data.updateType : UPDATE_TYPE_FROM_WEB,
             contents: data.contents
         }
-
-        return params
     }
 }
 

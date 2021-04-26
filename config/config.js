@@ -19,7 +19,7 @@ module.exports = {
         expiresIn: 60 * 60 * 24 * 30
     },
     uploadDir: {
-        booksDir: `${envDir()}/upload/admin-upload-ebook`,
-        uploadOrigin: 'http://localhost:8089/admin-upload-ebook'
+        uploadPath: `${envDir()}/upload/admin-upload-ebook`,
+        uploadUrl: 'http://localhost:8089/admin-upload-ebook'
     }
 }

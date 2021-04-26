@@ -2,7 +2,7 @@ const { User } = require('@models/user')
 const { LoginValidator, RegisterValidator } = require('@validator')
 const { Result } = require('@lib/result')
 const { generateToken } = require('@core/util')
-const { handleRole } = require('@core/util')
+const { generateRole } = require('@core/util')
 
 class UserCtl {
     async register(ctx, body) {
@@ -30,7 +30,7 @@ class UserCtl {
     async userInfo(ctx, next) {
         const { userId, role } = ctx.state.auth
         const user = await User.getUserInfo(userId, role)
-        user.setDataValue('roles', handleRole(user.role))
+        user.setDataValue('roles', generateRole(user.role))
         new Result(user, '登录成功').success(ctx)
     }
 }

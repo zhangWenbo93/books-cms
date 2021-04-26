@@ -1,5 +1,7 @@
+const fs = require('fs')
+const path = require('path')
 const jwt = require('jsonwebtoken')
-const { security } = require('@config')
+const { security, uploadDir: { uploadPath, uploadUrl } } = require('@config')
 /***
  *
  */
@@ -47,7 +49,7 @@ const generateToken = (uid, scope) => {
     return token
 }
 
-const handleRole = role => {
+const generateRole = role => {
     if (+role === 1) {
         return ['admin']
     }
@@ -57,8 +59,30 @@ const handleRole = role => {
     }
 }
 
+const generateFile = file => {
+    const basename = path.basename(file.path) // 文件上传名
+    const dirname = path.dirname(file.path) // 本地文件路径
+    const extname = path.extname(file.path) // 后缀
+    const fileName = basename.replace(extname, '') // 文件无后缀的name
+    const url = `${uploadUrl}/book/${basename}` // 下载URL
+    const unzipPath = `${uploadPath}/unzip/${fileName}` // 解压后文件夹路径
+    const unzipUrl = `${uploadUrl}/unzip/${fileName}` // 解压后文件夹路径URL
+    if (!fs.existsSync(unzipPath)) {
+        fs.mkdirSync(unzipPath, { recursive: true }) // 创建电子书解压后的目录
+    }
+
+    return {
+        basename,
+        fileName,
+        url,
+        unzipPath,
+        unzipUrl
+    }
+}
+
 module.exports = {
     findMembers,
     generateToken,
-    handleRole
+    generateRole,
+    generateFile
 }

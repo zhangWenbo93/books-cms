@@ -5,7 +5,7 @@ const KoaBody = require('koa-body')
 const KoaStatic = require('koa-static')
 const InitManager = require('@core/init')
 const catchError = require('@middlewares/exception')
-const { uploadDir: { booksDir } } = require('@config')
+const { uploadDir: { uploadPath } } = require('@config')
 
 const app = new Koa()
 const isDev = process.env.NODE_ENV === 'production'
@@ -17,7 +17,7 @@ app.use(
     KoaBody({
         multipart: true,
         formidable: {
-            uploadDir: path.resolve('./', `${booksDir}/book/`),
+            uploadDir: path.resolve('./', `${uploadPath}/book/`),
             keepExtensions: true // 保留拓展名
         }
     })
