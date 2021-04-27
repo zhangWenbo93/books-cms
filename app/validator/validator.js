@@ -64,7 +64,18 @@ class RegisterValidator extends LinValidator {
     }
 }
 
+class CreateValidator extends LinValidator {
+    constructor() {
+        super()
+        this.title = [new Rule('isLength', '书名不能为空', { min: 1 })]
+        this.author = [new Rule('isLength', '作者不能为空', { min: 1 })]
+        this.publisher = [new Rule('isLength', '出版社不能为空', { min: 1 })]
+        this.language = [new Rule('isLength', 'language不能为空', { min: 1 })]
+    }
+}
+
 module.exports = {
     LoginValidator,
-    RegisterValidator
+    RegisterValidator,
+    CreateValidator
 }

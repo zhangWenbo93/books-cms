@@ -8,19 +8,16 @@ const { generateFile } = require('@core/util')
 const { uploadDir: { uploadPath, uploadUrl } } = require('@config')
 
 class Book extends Model {
-    static async addBook(file, data) {
+    static async parse(file) {
         const basicData = Book._createBookFromFile(file)
-        // try {
-        //     return await Book.create({
-        //         fileName: 'name',
-        //         title: '223',
-        //         ...params
-        //     })
-        // } catch (error) {
-        //     console.log(error)
-        // }
         const epubData = await EpubParse.parse(file)
         return { ...basicData, ...epubData }
+    }
+
+    static async createBook(data) {
+        return await Book.create({
+            ...data
+        })
     }
 
     static async updateBook(data) {

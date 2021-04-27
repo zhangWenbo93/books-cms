@@ -8,13 +8,13 @@ const { uploadDir: { uploadPath, uploadUrl } } = require('@config')
 
 class EpubParse {
     /**
-     * @description 解析当前电子书的信息
-     * @date 2021-04-25
-     * @static
-     * @param {*} file
-     * @returns
-     * @memberof EpubParse
-     */
+    * @description 解析当前电子书的信息
+    * @date 2021-04-25
+    * @static
+    * @param {*} file
+    * @returns
+    * @memberof EpubParse
+    */
     static parse(file) {
         return new Promise((resolve, reject) => {
             const { basename, fileName } = generateFile(file)
@@ -47,7 +47,7 @@ class EpubParse {
                                 const imgData = {}
                                 const suffix = mimeType.split('/')[1]
                                 const coverPath = `${uploadPath}/img/${fileName}.${suffix}`
-                                const coverUrl = `${uploadUrl}/img/${fileName}.${suffix}`
+                                const coverUrl = `/img/${fileName}.${suffix}`
                                 fs.writeFileSync(coverPath, imgBuffer, 'binary')
                                 this.coverPath = `/img/${fileName}.${suffix}`
                                 this.cover = coverUrl
@@ -71,12 +71,12 @@ class EpubParse {
         })
     }
     /**
-    * @description 解压当前电子书到指定目录
-    * @date 2021-04-25
-    * @static
-    * @param {*} file
-    * @memberof EpubParse
-    */
+     * @description 解压当前电子书到指定目录
+     * @date 2021-04-25
+     * @static
+     * @param {*} file
+     * @memberof EpubParse
+     */
     static unzip(file) {
         const { basename, unzipPath } = generateFile(file)
         const zip = new AdmZip(`${uploadPath}/book/${basename}`) // 解析文件路径 --- 绝对路径
@@ -118,9 +118,9 @@ class EpubParse {
                 if (item.navPoint && item.navPoint.length > 0) {
                     item.navPoint = findParent(item.navPoint, level + 1, item['$'].id)
                 } else if (item.navPoint) {
-                    // navPoint 是一个对象的时候，说明此时有当前这一个子目录
-                    item.level = level + 1
-                    item.pid = item['$'].id
+                    // navPoint 是一个对象的时候，说明此时有当前这一个子目录，给子目录添加相应字段
+                    item.navPoint.level = level + 1
+                    item.navPoint.pid = item['$'].id
                 }
                 return item
             })
@@ -154,9 +154,12 @@ class EpubParse {
             const trees = []
             array.forEach(v => {
                 v.children = []
+                // v.pid 不存在 说明这是一个一级目录
                 if (v.pid === '') {
                     trees.push(v)
                 } else {
+                    // v.pid 存在 说明这是一个次级目录，我们需要找到它的父级目录
+                    // 找到 pid 相同的 父级目录， 并将当前目录存入 父级目录的 children
                     const parent = array.find(_ => _.navId === v.pid)
                     parent.children.push(v)
                 }
@@ -164,7 +167,7 @@ class EpubParse {
             return trees
         }
         /**
-        * @description 过滤对象无限用字段
+        * @description 过滤对象无用字段
         * @date 2021-04-26
         * @param {*} obj
         * @param {*} array
@@ -181,7 +184,7 @@ class EpubParse {
             return new Promise(resolve => {
                 const ncxFilePath = `${unzipPath}/${getNcxFilePath()}`
                 const xml = fs.readFileSync(ncxFilePath, 'utf-8') // 读取 ncx 文件
-                const dir = path.dirname(ncxFilePath).replace(uploadPath, '') // 获取 ncx 文件所在目录地址
+                const dir = path.dirname(ncxFilePath).replace(uploadPath, '') // 获取 ncx 文件所在目录相对地址
                 // 将 ncx 文件从 xml 转化为 json
                 xml2js(
                     xml,
@@ -200,6 +203,8 @@ class EpubParse {
                             } else {
                                 navMap.navPoint = findParent(navMap.navPoint)
                                 const newNavMap = flatten(navMap.navPoint)
+                                console.log('newNavMap', newNavMap)
+
                                 const chapters = []
                                 const uselessField = ['$', 'content', 'navLabel', 'navPoint']
                                 // epub.flow 是当前电子书的所有目录
@@ -216,6 +221,7 @@ class EpubParse {
                                     filterUselessField(chapter, uselessField)
                                     chapters.push(chapter)
                                 })
+                                // console.log('chapters', chapters)
                                 const chapterTree = generateTree(chapters) // 将目录转化为树状结构
                                 resolve({ chapters, chapterTree })
                             }
