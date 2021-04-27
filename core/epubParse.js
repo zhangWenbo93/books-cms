@@ -58,7 +58,7 @@ class EpubParse {
                             EpubParse.unzip(file)
                             EpubParse.parseContents(file, epub).then(({ chapters, chapterTree }) => {
                                 this.contents = chapters
-                                this.chapterTree = chapterTree
+                                this.contentsTree = chapterTree
                                 epub.getImage(cover, handleGetImage)
                             })
                         } catch (error) {
@@ -181,6 +181,7 @@ class EpubParse {
             return new Promise(resolve => {
                 const ncxFilePath = `${unzipPath}/${getNcxFilePath()}`
                 const xml = fs.readFileSync(ncxFilePath, 'utf-8') // 读取 ncx 文件
+                const dir = path.dirname(ncxFilePath).replace(uploadPath, '') // 获取 ncx 文件所在目录地址
                 // 将 ncx 文件从 xml 转化为 json
                 xml2js(
                     xml,
@@ -208,7 +209,7 @@ class EpubParse {
                                     const src = chapter.content['$'].src
                                     chapter.label = chapter.navLabel.text || ''
                                     chapter.href = `${src}`
-                                    chapter.text = `${uploadUrl}/unzip/${fileName}/${src}` // 生成章节的URL
+                                    chapter.text = `${uploadUrl}${dir}/${src}` // 生成章节的URL
                                     chapter.navId = chapter['$'].id
                                     chapter.fileName = fileName
                                     chapter.order = index + 1
