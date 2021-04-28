@@ -115,15 +115,19 @@ const delDir = dir => {
 
 const reset = data => {
     const { path, filePath, coverPath, unzipPath } = data
+
     if (path && generatePathExists(path)) {
         fs.unlinkSync(generatePath(path))
     }
+    // 清除源文件
     if (filePath && generatePathExists(filePath)) {
         fs.unlinkSync(generatePath(filePath))
     }
+    // 清除封面图片
     if (coverPath && generatePathExists(coverPath)) {
         fs.unlinkSync(generatePath(coverPath))
     }
+    // 清除压缩文件夹
     if (unzipPath && generatePathExists(unzipPath)) {
         delDir(generatePath(unzipPath))
     }

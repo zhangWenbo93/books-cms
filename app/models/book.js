@@ -40,6 +40,7 @@ class Book extends Model {
     }
 
     static async delBook(data) {
+        // 删除文件所在文件夹
         reset(data)
         if (data.fileName) {
             await Book.destroy({
