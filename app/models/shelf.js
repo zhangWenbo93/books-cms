@@ -5,7 +5,7 @@ class Shelf extends Model {}
 
 Shelf.init(
     {
-        fileName: DataTypes.INSERT,
+        fileName: DataTypes.STRING,
         openId: DataTypes.STRING,
         date: {
             type: DataTypes.BIGINT,

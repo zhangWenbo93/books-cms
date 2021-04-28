@@ -203,8 +203,6 @@ class EpubParse {
                             } else {
                                 navMap.navPoint = findParent(navMap.navPoint)
                                 const newNavMap = flatten(navMap.navPoint)
-                                console.log('newNavMap', newNavMap)
-
                                 const chapters = []
                                 const uselessField = ['$', 'content', 'navLabel', 'navPoint']
                                 // epub.flow 是当前电子书的所有目录
@@ -213,7 +211,8 @@ class EpubParse {
                                 newNavMap.forEach((chapter, index) => {
                                     const src = chapter.content['$'].src
                                     chapter.label = chapter.navLabel.text || ''
-                                    chapter.href = `${src}`
+                                    chapter.bookId = `${src}`
+                                    chapter.href = `${dir}/${src}`.replace(`/unzip/${fileName}`, '')
                                     chapter.text = `${uploadUrl}${dir}/${src}` // 生成章节的URL
                                     chapter.navId = chapter['$'].id
                                     chapter.fileName = fileName
@@ -221,7 +220,6 @@ class EpubParse {
                                     filterUselessField(chapter, uselessField)
                                     chapters.push(chapter)
                                 })
-                                // console.log('chapters', chapters)
                                 const chapterTree = generateTree(chapters) // 将目录转化为树状结构
                                 resolve({ chapters, chapterTree })
                             }

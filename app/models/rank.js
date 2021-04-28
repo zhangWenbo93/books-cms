@@ -10,7 +10,7 @@ Rank.init(
             primaryKey: true,
             autoIncrement: true
         },
-        fileName: DataTypes.INSERT,
+        fileName: DataTypes.STRING,
         openId: DataTypes.STRING,
         rank: DataTypes.INTEGER,
         create_dt: {

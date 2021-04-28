@@ -12,7 +12,7 @@ HotBook.init(
         },
         openId: DataTypes.STRING,
         title: DataTypes.STRING,
-        fileName: DataTypes.INSERT,
+        fileName: DataTypes.STRING,
         create_dt: {
             type: DataTypes.BIGINT,
             defaultValue: new Date().getTime()

@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const jwt = require('jsonwebtoken')
 const { security, uploadDir: { uploadPath, uploadUrl } } = require('@config')
+
 /***
  *
  */
@@ -80,9 +81,61 @@ const generateFile = file => {
     }
 }
 
+const generatePath = path => {
+    if (path.startsWith('/')) {
+        return `${uploadPath}${path}`
+    } else {
+        return `${uploadPath}/${path}`
+    }
+}
+
+const generatePathExists = path => {
+    if (path.startsWith(uploadPath)) {
+        return fs.existsSync(path)
+    } else {
+        return fs.existsSync(generatePath(path))
+    }
+}
+
+const delDir = dir => {
+    // 读取文件夹中所有文件及文件夹
+    const list = fs.readdirSync(dir)
+    list.forEach((v, i) => {
+        const files = path.resolve(dir, v)
+        const pathstat = fs.statSync(files)
+        if (pathstat.isFile()) {
+            fs.unlinkSync(files)
+        } else {
+            delDir(files)
+        }
+    })
+    // 删除空文件夹
+    fs.rmdirSync(dir)
+}
+
+const reset = data => {
+    const { path, filePath, coverPath, unzipPath } = data
+    if (path && generatePathExists(path)) {
+        fs.unlinkSync(generatePath(path))
+    }
+    if (filePath && generatePathExists(filePath)) {
+        fs.unlinkSync(generatePath(filePath))
+    }
+    if (coverPath && generatePathExists(coverPath)) {
+        fs.unlinkSync(generatePath(coverPath))
+    }
+    if (unzipPath && generatePathExists(unzipPath)) {
+        delDir(generatePath(unzipPath))
+    }
+}
+
 module.exports = {
     findMembers,
     generateToken,
     generateRole,
-    generateFile
+    generateFile,
+    generatePath,
+    generatePathExists,
+    reset,
+    delDir
 }

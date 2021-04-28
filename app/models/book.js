@@ -4,8 +4,9 @@ const path = require('path')
 const Epub = require('@core/epub')
 const { sequelize } = require('@core/db')
 const { EpubParse } = require('@core/epubParse')
-const { generateFile } = require('@core/util')
+const { generateFile, reset } = require('@core/util')
 const { uploadDir: { uploadPath, uploadUrl } } = require('@config')
+const { Contents } = require('@models/contents')
 
 class Book extends Model {
     static async parse(file) {
@@ -15,13 +16,43 @@ class Book extends Model {
     }
 
     static async createBook(data) {
-        return await Book.create({
-            ...data
-        })
+        const book = await Book.getBook(data)
+        if (book) {
+            await Book.delBook(data)
+            throw new global.errs.Forbbiden('电子书已存在')
+        } else {
+            const params = Book._createBookFromData(data)
+            return await Book.create({ ...params })
+        }
     }
 
     static async updateBook(data) {
         const basicData = Book._createBookFromData(this.data)
+    }
+
+    static async getBook({ title, author, publisher }) {
+        const book = await Book.findOne({
+            where: {
+                [Op.and]: { title, author, publisher }
+            }
+        })
+        return book
+    }
+
+    static async delBook(data) {
+        reset(data)
+        if (data.fileName) {
+            await Book.destroy({
+                where: {
+                    fileName: data.fileName
+                }
+            })
+            await Contents.destroy({
+                where: {
+                    fileName: data.fileName
+                }
+            })
+        }
     }
 
     static _createBookFromFile(file) {
@@ -37,7 +68,7 @@ class Book extends Model {
             contents: [], // 目录
             cover: '', // 封面图片URL
             coverPath: '',
-            category: -1, // 分类ID
+            category: 99, // 分类ID
             categoryText: '', // 分类名称
             language: '', // 语种
             unzipPath: `/unzip/${fileName}`, // 解压后的电子书目录
@@ -62,10 +93,9 @@ class Book extends Model {
             unzipPath: data.unzipPath,
             coverPath: data.coverPath,
             createUser: data.username,
-            createDt: new Date().getTime(),
-            updateDt: new Date().getTime(),
-            updateType: data.updateType === 0 ? data.updateType : UPDATE_TYPE_FROM_WEB,
-            contents: data.contents
+            updateType: data.updateType === 0 ? data.updateType : 1,
+            category: data.category || 99,
+            categoryText: data.categoryText || '自定义'
         }
     }
 }
