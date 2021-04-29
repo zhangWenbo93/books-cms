@@ -2,7 +2,7 @@ const { User } = require('@models/user')
 const { Book } = require('@models/book')
 const { Contents } = require('@models/contents')
 const { Result } = require('@lib/result')
-const { CreateValidator } = require('@validator')
+const { CreateValidator, FileNameValidator } = require('@validator')
 
 class BooksCtl {
     async upload(ctx) {
@@ -25,8 +25,8 @@ class BooksCtl {
         }
         const book = await Book.createBook(body)
         if (book) {
-            const content = await Contents.addContents(body.contents)
-            if (content && content.length > 0) {
+            if (body.content && body.content.length > 0) {
+                await Contents.addContents(body.contents)
                 new Result('创建成功').success(ctx)
             } else {
                 await Book.delBook(body)
@@ -35,6 +35,19 @@ class BooksCtl {
         } else {
             new Result('创建失败').success(ctx)
         }
+    }
+
+    async getFileNameBook(ctx) {
+        const v = await new FileNameValidator().validate(ctx)
+        const book = await Book.getFileNameBook(v.get('path.fileName'))
+        const { contents, contentsTree } = await Contents.getFileNameContents(v.get('path.fileName'))
+        book.setDataValue('contents', contents)
+        book.setDataValue('contentsTree', contentsTree)
+        new Result({ ...book.dataValues }, '查询成功').success(ctx)
+    }
+    async getBookList(ctx) {
+        const list = await Book.getBookList()
+        new Result({ list }, '查询成功').success(ctx)
     }
 }
 

@@ -4,29 +4,38 @@ const { sequelize } = require('@core/db')
 
 class Contents extends Model {
     static async addContents(contents) {
-        if (contents && contents.length > 0) {
-            const array = []
-            for (let i = 0; i < contents.length; i++) {
-                const content = contents[i]
-                const _content = _.pick(content, [
-                    'fileName',
-                    'bookId',
-                    'href',
-                    'order',
-                    'level',
-                    'text',
-                    'label',
-                    'pid',
-                    'navId'
-                ])
-                Contents.removeAttribute('id')
-                const c = await Contents.create({
-                    ..._content
-                })
-                array.push(c)
-            }
-            return array
+        try {
+            return Contents.bulkCreate(contents, { raw: true })
+        } catch (err) {
+            throw new global.errs.Forbbiden(err.message)
         }
+    }
+
+    static async getFileNameContents(fileName) {
+        const contents = await Contents.findAll({
+            where: {
+                fileName
+            }
+        })
+        const contentsTree = Contents._generateTree(contents)
+        return { contents, contentsTree }
+    }
+
+    static _generateTree(array) {
+        const trees = []
+        array.forEach(v => {
+            v.children = []
+            // v.pid 不存在 说明这是一个一级目录
+            if (v.pid === '') {
+                trees.push(v)
+            } else {
+                // v.pid 存在 说明这是一个次级目录，我们需要找到它的父级目录
+                // 找到 pid 相同的 父级目录， 并将当前目录存入 父级目录的 children
+                const parent = array.find(_ => _.navId === v.pid)
+                parent.children.push(v)
+            }
+        })
+        return trees
     }
 }
 
@@ -48,5 +57,7 @@ Contents.init(
         timestamps: false
     }
 )
+
+Contents.removeAttribute('id')
 
 module.exports = { Contents }

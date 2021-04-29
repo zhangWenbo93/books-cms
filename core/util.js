@@ -60,6 +60,50 @@ const generateRole = role => {
     }
 }
 
+const createBookFromFile = file => {
+    const { basename, fileName, url, unzipUrl } = generateFile(file)
+    return {
+        fileName: fileName,
+        path: `/book/${basename}`, // epub文件相对路径
+        filePath: `/book/${basename}`, // epub文件路径
+        url: url, // epub文件url
+        title: '', // 标题
+        author: '', // 作者
+        publisher: '', // 出版社
+        contents: [], // 目录
+        cover: '', // 封面图片URL
+        coverPath: '',
+        category: 99, // 分类ID
+        categoryText: '', // 分类名称
+        language: '', // 语种
+        unzipPath: `/unzip/${fileName}`, // 解压后的电子书目录
+        unzipUrl: unzipUrl, // 解压后的电子书链接
+        originalName: file.name // 原文件名
+    }
+}
+
+const createBookFromData = data => {
+    return {
+        fileName: data.fileName,
+        cover: data.coverPath,
+        title: data.title,
+        author: data.author,
+        publisher: data.publisher,
+        bookId: data.fileName,
+        language: data.language,
+        rootFile: data.rootFile,
+        originalName: data.originalName,
+        path: data.path || data.filePath,
+        filePath: data.path || data.filePath,
+        unzipPath: data.unzipPath,
+        coverPath: data.coverPath,
+        createUser: data.username,
+        updateType: data.updateType === 0 ? data.updateType : 1,
+        category: data.category || 99,
+        categoryText: data.categoryText || '自定义'
+    }
+}
+
 const generateFile = file => {
     const basename = path.basename(file.path) // 文件上传名
     const dirname = path.dirname(file.path) // 本地文件路径
@@ -137,6 +181,8 @@ module.exports = {
     findMembers,
     generateToken,
     generateRole,
+    createBookFromFile,
+    createBookFromData,
     generateFile,
     generatePath,
     generatePathExists,

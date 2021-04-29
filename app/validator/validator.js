@@ -74,8 +74,16 @@ class CreateValidator extends LinValidator {
     }
 }
 
+class FileNameValidator extends LinValidator {
+    constructor() {
+        super()
+        this.fileName = [new Rule('isLength', 'fileName不能为空', { min: 1 })]
+    }
+}
+
 module.exports = {
     LoginValidator,
     RegisterValidator,
-    CreateValidator
+    CreateValidator,
+    FileNameValidator
 }
