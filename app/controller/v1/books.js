@@ -3,6 +3,7 @@ const { Book } = require('@models/book')
 const { Contents } = require('@models/contents')
 const { Result } = require('@lib/result')
 const { CreateValidator, FileNameValidator } = require('@validator')
+const { generateCoverUrl } = require('@core/util')
 
 class BooksCtl {
     async upload(ctx) {
@@ -41,6 +42,7 @@ class BooksCtl {
         const v = await new FileNameValidator().validate(ctx)
         const book = await Book.getFileNameBook(v.get('path.fileName'))
         const contents = await Contents.getFileNameContents(v.get('path.fileName'))
+        book.cover = generateCoverUrl(book)
         new Result({ ...book, ...contents }, '查询成功').success(ctx)
     }
     async getBookList(ctx) {

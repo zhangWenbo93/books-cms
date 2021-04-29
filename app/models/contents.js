@@ -1,6 +1,7 @@
 const { Sequelize, Model, DataTypes, Op } = require('sequelize')
 const { pick, _ } = require('lodash')
 const { sequelize } = require('@core/db')
+const { generateTree } = require('@core/util')
 
 class Contents extends Model {
     // 电子书目录入库
@@ -16,25 +17,8 @@ class Contents extends Model {
             },
             raw: true // 只返回数据库查询结果
         })
-        const contentsTree = Contents._generateTree(contents)
+        const contentsTree = generateTree(contents)
         return { contents, contentsTree }
-    }
-
-    static _generateTree(array) {
-        const trees = []
-        array.forEach(v => {
-            v.children = []
-            // v.pid 不存在 说明这是一个一级目录
-            if (v.pid === '') {
-                trees.push(v)
-            } else {
-                // v.pid 存在 说明这是一个次级目录，我们需要找到它的父级目录
-                // 找到 pid 相同的 父级目录， 并将当前目录存入 父级目录的 children
-                const parent = array.find(_ => _.navId === v.pid)
-                parent.children.push(v)
-            }
-        })
-        return trees
     }
 }
 

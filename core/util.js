@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const jwt = require('jsonwebtoken')
-const { security, uploadDir: { uploadPath, uploadUrl } } = require('@config')
+const { security, uploadDir: { uploadPath, uploadUrl, oldUploadUrl } } = require('@config')
 
 /***
  *
@@ -50,6 +50,7 @@ const generateToken = (uid, scope) => {
     return token
 }
 
+// 权限处理
 const generateRole = role => {
     if (+role === 1) {
         return ['admin']
@@ -60,6 +61,7 @@ const generateRole = role => {
     }
 }
 
+// 文件上传数据模型
 const createBookFromFile = file => {
     const { basename, fileName, url, unzipUrl } = generateFile(file)
     return {
@@ -82,6 +84,7 @@ const createBookFromFile = file => {
     }
 }
 
+// 文件回显数据模型
 const createBookFromData = data => {
     return {
         fileName: data.fileName,
@@ -104,6 +107,7 @@ const createBookFromData = data => {
     }
 }
 
+// 文件基础信息生成
 const generateFile = file => {
     const basename = path.basename(file.path) // 文件上传名
     const dirname = path.dirname(file.path) // 本地文件路径
@@ -125,6 +129,7 @@ const generateFile = file => {
     }
 }
 
+// 文件路径拼接
 const generatePath = path => {
     if (path.startsWith('/')) {
         return `${uploadPath}${path}`
@@ -133,6 +138,7 @@ const generatePath = path => {
     }
 }
 
+// 文件路径查询是否存在
 const generatePathExists = path => {
     if (path.startsWith(uploadPath)) {
         return fs.existsSync(path)
@@ -141,6 +147,7 @@ const generatePathExists = path => {
     }
 }
 
+// 文件夹删除
 const delDir = dir => {
     // 读取文件夹中所有文件及文件夹
     const list = fs.readdirSync(dir)
@@ -157,6 +164,7 @@ const delDir = dir => {
     fs.rmdirSync(dir)
 }
 
+// 源文件清除
 const reset = data => {
     const { path, filePath, coverPath, unzipPath } = data
 
@@ -177,6 +185,40 @@ const reset = data => {
     }
 }
 
+/**
+* @description 将一维数组转化为嵌套树状结构
+* @date 2021-04-26
+* @param {*} array
+* @returns
+*/
+const generateTree = array => {
+    const trees = []
+    array.forEach(v => {
+        v.children = []
+        // v.pid 不存在 说明这是一个一级目录
+        if (v.pid === '') {
+            trees.push(v)
+        } else {
+            // v.pid 存在 说明这是一个次级目录，我们需要找到它的父级目录
+            // 找到 pid 相同的 父级目录， 并将当前目录存入 父级目录的 children
+            const parent = array.find(_ => _.navId === v.pid)
+            parent.children.push(v)
+        }
+    })
+    return trees
+}
+
+// 图片路径判断拼接
+const generateCoverUrl = ({ updateType, cover }) => {
+    if (cover) {
+        const coverPath = +updateType === 0 ? oldUploadUrl : uploadUrl
+        const path = cover.startsWith('/') ? '' : '/'
+        return `${coverPath}${path}${cover}`
+    } else {
+        return null
+    }
+}
+
 module.exports = {
     findMembers,
     generateToken,
@@ -187,5 +229,7 @@ module.exports = {
     generatePath,
     generatePathExists,
     reset,
-    delDir
+    delDir,
+    generateTree,
+    generateCoverUrl
 }

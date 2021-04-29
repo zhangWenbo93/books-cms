@@ -3,7 +3,7 @@ const path = require('path')
 const AdmZip = require('adm-zip')
 const Epub = require('@core/epub')
 const xml2js = require('xml2js').parseString
-const { generateFile } = require('@core/util')
+const { generateFile, generateTree } = require('@core/util')
 const { uploadDir: { uploadPath, uploadUrl } } = require('@config')
 
 class EpubParse {
@@ -144,28 +144,7 @@ class EpubParse {
                 })
             )
         }
-        /**
-        * @description 将一维数组转化为嵌套树状结构
-        * @date 2021-04-26
-        * @param {*} array
-        * @returns
-        */
-        function generateTree(array) {
-            const trees = []
-            array.forEach(v => {
-                v.children = []
-                // v.pid 不存在 说明这是一个一级目录
-                if (v.pid === '') {
-                    trees.push(v)
-                } else {
-                    // v.pid 存在 说明这是一个次级目录，我们需要找到它的父级目录
-                    // 找到 pid 相同的 父级目录， 并将当前目录存入 父级目录的 children
-                    const parent = array.find(_ => _.navId === v.pid)
-                    parent.children.push(v)
-                }
-            })
-            return trees
-        }
+
         /**
         * @description 过滤对象无用字段
         * @date 2021-04-26
