@@ -30,8 +30,8 @@ class UserCtl {
     async userInfo(ctx, next) {
         const { userId, role } = ctx.state.auth
         const user = await User.getUserInfo(userId, role)
-        user.setDataValue('roles', generateRole(user.role))
-        new Result(user, '登录成功').success(ctx)
+        const roles = generateRole(user.role)
+        new Result({ ...user, roles }, '登录成功').success(ctx)
     }
 }
 

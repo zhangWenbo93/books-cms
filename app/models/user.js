@@ -24,7 +24,8 @@ class User extends Model {
         const user = await User.findOne({
             where: {
                 [Op.and]: { id, role }
-            }
+            },
+            raw: true
         })
 
         if (!user) {

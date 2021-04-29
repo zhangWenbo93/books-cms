@@ -3,19 +3,18 @@ const { pick, _ } = require('lodash')
 const { sequelize } = require('@core/db')
 
 class Contents extends Model {
+    // 电子书目录入库
     static async addContents(contents) {
-        try {
-            return Contents.bulkCreate(contents, { raw: true })
-        } catch (err) {
-            throw new global.errs.Forbbiden(err.message)
-        }
+        return Contents.bulkCreate(contents, { raw: true })
     }
 
     static async getFileNameContents(fileName) {
         const contents = await Contents.findAll({
+            order: ['order'],
             where: {
                 fileName
-            }
+            },
+            raw: true // 只返回数据库查询结果
         })
         const contentsTree = Contents._generateTree(contents)
         return { contents, contentsTree }

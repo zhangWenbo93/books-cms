@@ -43,7 +43,8 @@ class Book extends Model {
         const book = await Book.findOne({
             where: {
                 fileName
-            }
+            },
+            raw: true
         })
         return book
     }

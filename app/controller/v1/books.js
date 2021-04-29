@@ -40,10 +40,8 @@ class BooksCtl {
     async getFileNameBook(ctx) {
         const v = await new FileNameValidator().validate(ctx)
         const book = await Book.getFileNameBook(v.get('path.fileName'))
-        const { contents, contentsTree } = await Contents.getFileNameContents(v.get('path.fileName'))
-        book.setDataValue('contents', contents)
-        book.setDataValue('contentsTree', contentsTree)
-        new Result({ ...book.dataValues }, '查询成功').success(ctx)
+        const contents = await Contents.getFileNameContents(v.get('path.fileName'))
+        new Result({ ...book, ...contents }, '查询成功').success(ctx)
     }
     async getBookList(ctx) {
         const list = await Book.getBookList()
