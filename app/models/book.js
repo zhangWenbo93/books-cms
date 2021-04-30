@@ -4,7 +4,7 @@ const path = require('path')
 const Epub = require('@core/epub')
 const { sequelize } = require('@core/db')
 const { EpubParse } = require('@core/epubParse')
-const { createBookFromFile, createBookFromData, generateFile, reset } = require('@core/util')
+const { createBookFromFile, createBookFromData, generateFile, reset, generateCoverUrl } = require('@core/util')
 const { uploadDir: { uploadPath, uploadUrl } } = require('@config')
 const { Contents } = require('@models/contents')
 
@@ -64,10 +64,15 @@ class Book extends Model {
     // }
 
     // static async getBookList({ title, author, publisher }) {
-    static async getBookList() {
-        return await Book.findAll({
-            where: {}
+    static async getBookList(params) {
+        const { page, pageSize } = params
+        const { count, rows } = await Book.findAndCountAll({
+            limit: pageSize,
+            offset: (page - 1) * pageSize, //第x页*每页个数
+            where: {},
+            raw: true
         })
+        return { count, list: Book._genBookListCover(rows) }
     }
 
     static async delBook(data) {
@@ -85,6 +90,13 @@ class Book extends Model {
                 }
             })
         }
+    }
+
+    static _genBookListCover(list) {
+        return list.map(v => {
+            v.cover = generateCoverUrl(v)
+            return v
+        })
     }
 }
 

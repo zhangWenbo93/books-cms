@@ -2,7 +2,7 @@ const { User } = require('@models/user')
 const { Book } = require('@models/book')
 const { Contents } = require('@models/contents')
 const { Result } = require('@lib/result')
-const { CreateValidator, FileNameValidator } = require('@validator')
+const { CreateValidator, FileNameValidator, ListQueryValidator } = require('@validator')
 const { generateCoverUrl } = require('@core/util')
 
 class BooksCtl {
@@ -62,8 +62,10 @@ class BooksCtl {
         new Result({ ...book, ...contents }, '查询成功').success(ctx)
     }
     async getBookList(ctx) {
-        const list = await Book.getBookList()
-        new Result({ list }, '查询成功').success(ctx)
+        const v = await new ListQueryValidator().validate(ctx)
+        const params = v.parsed.body
+        const list = await Book.getBookList(params)
+        new Result({ ...list }, '查询成功').success(ctx)
     }
 }
 

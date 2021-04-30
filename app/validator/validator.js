@@ -81,9 +81,17 @@ class FileNameValidator extends LinValidator {
     }
 }
 
+class ListQueryValidator extends LinValidator {
+    constructor() {
+        super()
+        this.page = [new Rule('isInt', '参数为正整数', { min: 1 }), new Rule('isLength', 'page不能为空', { min: 1 })]
+        this.pageSize = [new Rule('isInt', '参数为正整数', { min: 1 }), new Rule('isLength', 'pageSize不能为空', { min: 1 })]
+    }
+}
 module.exports = {
     LoginValidator,
     RegisterValidator,
     CreateValidator,
-    FileNameValidator
+    FileNameValidator,
+    ListQueryValidator
 }
