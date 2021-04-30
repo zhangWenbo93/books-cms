@@ -18,23 +18,39 @@ class BooksCtl {
 
     async createBook(ctx) {
         const v = await new CreateValidator().validate(ctx)
-        const body = v.parsed.body
+        const params = v.parsed.body
         const { userId, role } = ctx.state.auth
         const user = await User.getUserInfo(userId, role)
         if (user.username) {
-            body.username = user.username
+            params.username = user.username
         }
-        const book = await Book.createBook(body)
+        const book = await Book.createBook(params)
         if (book) {
-            if (body.content && body.content.length > 0) {
-                await Contents.addContents(body.contents)
+            if (params.content && params.content.length > 0) {
+                await Contents.addContents(params.contents)
                 new Result('创建成功').success(ctx)
             } else {
-                await Book.delBook(body)
+                await Book.delBook(params)
                 new Result('创建失败').success(ctx)
             }
         } else {
             new Result('创建失败').success(ctx)
+        }
+    }
+
+    async updateBook(ctx) {
+        const v = await new CreateValidator().validate(ctx)
+        const params = v.parsed.body
+        const { userId, role } = ctx.state.auth
+        const user = await User.getUserInfo(userId, role)
+        if (user.username) {
+            params.username = user.username
+        }
+        const book = await Book.updateBook(params)
+        if (book) {
+            new Result('更新成功').success(ctx)
+        } else {
+            new Result('更新失败').success(ctx)
         }
     }
 

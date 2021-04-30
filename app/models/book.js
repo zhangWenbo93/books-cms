@@ -27,7 +27,12 @@ class Book extends Model {
     }
 
     static async updateBook(data) {
-        const basicData = createBookFromData(data)
+        const book = await Book.getFileNameBook(data.fileName)
+        if (+book.updateType === 0) {
+            throw new global.errs.Forbbiden('内置电子书无法更新')
+        }
+        const updateData = createBookFromData(data)
+        return await Book.update({ ...updateData }, { where: { id: book.id } })
     }
 
     static async getBook({ title, author, publisher }) {
