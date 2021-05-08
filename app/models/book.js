@@ -1,5 +1,4 @@
 const { Sequelize, Model, DataTypes, Op } = require('sequelize')
-const _ = require('lodash')
 const fs = require('fs')
 const path = require('path')
 const Epub = require('@core/epub')
@@ -57,7 +56,6 @@ class Book extends Model {
 
     static async getBookList(params) {
         const { page, pageSize, order = 'ASC' } = params
-        console.log('order', order)
         const { count, rows } = await Book.findAndCountAll({
             limit: pageSize,
             offset: (page - 1) * pageSize, //第x页*每页个数
@@ -88,11 +86,13 @@ class Book extends Model {
     }
 
     static async getCategory() {
-        return await Book.findAll({
+        const sql = 'select * from category order by category asc'
+        const result = await sequelize.query(sql, {
             attributes: ['category', 'categoryText'],
-            group: ['category'],
-            raw: true
+            raw: true,
+            type: sequelize.QueryTypes.SELECT
         })
+        return result
     }
 
     static _genBookListCover(list) {
