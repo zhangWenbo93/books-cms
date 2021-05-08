@@ -3,6 +3,7 @@ const { Sequelize, Model, DataTypes, Op } = require('sequelize')
 const { sequelize } = require('@core/db')
 
 class User extends Model {
+    // 用户校验
     static async validateUser(username, password) {
         const user = await User.findOne({
             where: {
@@ -20,6 +21,7 @@ class User extends Model {
         return user
     }
 
+    // 获取特定用户信息
     static async getUserInfo(id, role) {
         const user = await User.findOne({
             where: {

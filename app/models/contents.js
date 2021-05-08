@@ -9,6 +9,7 @@ class Contents extends Model {
         return Contents.bulkCreate(contents, { raw: true })
     }
 
+    // 获取特定书籍目录
     static async getFileNameContents(fileName) {
         const contents = await Contents.findAll({
             order: ['order'],

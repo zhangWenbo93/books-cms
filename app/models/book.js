@@ -9,12 +9,14 @@ const { uploadDir: { uploadPath, uploadUrl } } = require('@config')
 const { Contents } = require('@models/contents')
 
 class Book extends Model {
+    // 解析书籍
     static async parse(file) {
         const basicData = createBookFromFile(file)
         const epubData = await EpubParse.parse(file)
         return { ...basicData, ...epubData }
     }
 
+    // 创建书籍
     static async createBook(data) {
         const book = await Book.getBook(data)
         if (book) {
@@ -26,6 +28,7 @@ class Book extends Model {
         }
     }
 
+    // 更新书籍
     static async updateBook(data) {
         const book = await Book.getFileNameBook(data.fileName)
         if (+book.updateType === 0) {
@@ -35,6 +38,7 @@ class Book extends Model {
         return await Book.update({ ...updateData }, { where: { id: book.id } })
     }
 
+    // 获取特定书籍
     static async getBook({ title, author, publisher }) {
         const book = await Book.findOne({
             where: {
@@ -44,6 +48,7 @@ class Book extends Model {
         return book
     }
 
+    // 获取指定书籍
     static async getFileNameBook(fileName) {
         const book = await Book.findOne({
             where: {
@@ -54,6 +59,7 @@ class Book extends Model {
         return book
     }
 
+    // 获取户籍列表
     static async getBookList(params) {
         const { page, pageSize, order = 'ASC' } = params
         const { count, rows } = await Book.findAndCountAll({
@@ -68,6 +74,7 @@ class Book extends Model {
         return { count, list: Book._genBookListCover(rows) }
     }
 
+    // 文件删除
     static async delBook(data) {
         // 删除文件所在文件夹
         reset(data)
@@ -85,6 +92,7 @@ class Book extends Model {
         }
     }
 
+    // 分类视图查询
     static async getCategory() {
         const sql = 'select * from category order by category asc'
         const result = await sequelize.query(sql, {
