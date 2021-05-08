@@ -26,15 +26,15 @@ class BooksCtl {
         }
         const book = await Book.createBook(params)
         if (book) {
-            if (params.content && params.content.length > 0) {
+            if (params.contents && params.contents.length > 0) {
                 await Contents.addContents(params.contents)
                 new Result('创建成功').success(ctx)
             } else {
                 await Book.delBook(params)
-                new Result('创建失败').success(ctx)
+                new Result('创建失败').fail(ctx)
             }
         } else {
-            new Result('创建失败').success(ctx)
+            new Result('创建失败').fail(ctx)
         }
     }
 
@@ -50,7 +50,7 @@ class BooksCtl {
         if (book) {
             new Result('更新成功').success(ctx)
         } else {
-            new Result('更新失败').success(ctx)
+            new Result('更新失败').fail(ctx)
         }
     }
 
@@ -71,6 +71,16 @@ class BooksCtl {
     async getCategory(ctx) {
         const category = await Book.getCategory()
         new Result(category, '查询成功').success(ctx)
+    }
+
+    async deleteBook(ctx) {
+        const v = await new FileNameValidator().validate(ctx)
+        const book = await Book.getFileNameBook(v.get('path.fileName'))
+        if (+book.updateType === 0) {
+            throw new global.errs.Forbbiden('内置电子书无法删除')
+        }
+        const result = await Book.delBook(book)
+        result ? new Result('删除成功').success(ctx) : new Result('删除失败').fail(ctx)
     }
 }
 

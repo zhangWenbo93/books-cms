@@ -79,16 +79,17 @@ class Book extends Model {
         // 删除文件所在文件夹
         reset(data)
         if (data.fileName) {
-            await Book.destroy({
+            const book = await Book.destroy({
                 where: {
                     fileName: data.fileName
                 }
             })
-            await Contents.destroy({
+            const contents = await Contents.destroy({
                 where: {
                     fileName: data.fileName
                 }
             })
+            return book && contents
         }
     }
 

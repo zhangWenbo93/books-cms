@@ -50,7 +50,7 @@ class EpubParse {
                                 const coverUrl = `/img/${fileName}.${suffix}`
                                 fs.writeFileSync(coverPath, imgBuffer, 'binary')
                                 this.coverPath = `/img/${fileName}.${suffix}`
-                                this.cover = coverUrl
+                                this.cover = `${uploadUrl}${coverUrl}`
                                 resolve(this)
                             }
                         }

@@ -43,7 +43,7 @@ class Result {
     }
 
     fail(ctx) {
-        ctx.code = ResultType.CODE_ERROR
+        this.code = ResultType.CODE_ERROR
         this.json(ctx)
     }
 }
