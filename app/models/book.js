@@ -1,4 +1,5 @@
 const { Sequelize, Model, DataTypes, Op } = require('sequelize')
+const _ = require('lodash')
 const fs = require('fs')
 const path = require('path')
 const Epub = require('@core/epub')
@@ -54,22 +55,16 @@ class Book extends Model {
         return book
     }
 
-    // static async getBook({ title, author, publisher }) {
-    //     const book = await Book.findOne({
-    //         where: {
-    //             [Op.or]: { title, author, publisher }
-    //         }
-    //     })
-    //     return book
-    // }
-
-    // static async getBookList({ title, author, publisher }) {
     static async getBookList(params) {
-        const { page, pageSize } = params
+        const { page, pageSize, order = 'ASC' } = params
+        console.log('order', order)
         const { count, rows } = await Book.findAndCountAll({
             limit: pageSize,
             offset: (page - 1) * pageSize, //第x页*每页个数
-            where: {},
+            order: [['id', order]],
+            where: {
+                [Op.and]: Book._genSqlValue(params)
+            },
             raw: true
         })
         return { count, list: Book._genBookListCover(rows) }
@@ -92,11 +87,28 @@ class Book extends Model {
         }
     }
 
+    static async getCategory() {
+        return await Book.findAll({
+            attributes: ['category', 'categoryText'],
+            group: ['category'],
+            raw: true
+        })
+    }
+
     static _genBookListCover(list) {
         return list.map(v => {
             v.cover = generateCoverUrl(v)
             return v
         })
+    }
+
+    static _genSqlValue(params) {
+        const { title, author, category } = params
+        return {
+            ...(title && { title: { [Op.like]: `%${title}%` } }),
+            ...(author && { author: { [Op.like]: `%${author}%` } }),
+            ...(category && { category })
+        }
     }
 }
 

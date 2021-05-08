@@ -67,6 +67,11 @@ class BooksCtl {
         const list = await Book.getBookList(params)
         new Result({ ...list }, '查询成功').success(ctx)
     }
+
+    async getCategory(ctx) {
+        const category = await Book.getCategory()
+        new Result(category, '查询成功').success(ctx)
+    }
 }
 
 module.exports = new BooksCtl()
