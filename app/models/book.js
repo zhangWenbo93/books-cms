@@ -59,19 +59,19 @@ class Book extends Model {
         return book
     }
 
-    // 获取户籍列表
+    // 获取书籍列表
     static async getBookList(params) {
         const { page, pageSize, order = 'ASC' } = params
         const { count, rows } = await Book.findAndCountAll({
+            order: [['id', order]],
             limit: pageSize,
             offset: (page - 1) * pageSize, //第x页*每页个数
-            order: [['id', order]],
             where: {
                 [Op.and]: Book._genSqlValue(params)
             },
             raw: true
         })
-        return { count, list: Book._genBookListCover(rows) }
+        return { count, list: Book._genBookListCover(rows), page, pageSize }
     }
 
     // 文件删除
