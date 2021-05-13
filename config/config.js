@@ -30,6 +30,7 @@ module.exports = {
     uploadDir: {
         uploadPath: `${envDir(isDev)}/upload/admin-upload-ebook`,
         uploadUrl: `${newCoverUrl(isDev)}/admin-upload-ebook`,
-        oldUploadUrl: coverUrl(isDev)
+        // oldUploadUrl: coverUrl(isDev)
+        oldUploadUrl: 'https://book.youbaobao.xyz/book/res/img'
     }
 }
