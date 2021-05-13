@@ -27,6 +27,7 @@ class BooksCtl {
         const book = await Book.createBook(params)
         if (book) {
             if (params.contents && params.contents.length > 0) {
+                console.log(params.contents)
                 await Contents.addContents(params.contents)
                 new Result('创建成功').success(ctx)
             } else {
