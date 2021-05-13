@@ -26,6 +26,7 @@ class BooksCtl {
         }
         const book = await Book.createBook(params)
         if (book) {
+            console.log('书籍创建Ok')
             if (params.contents && params.contents.length > 0) {
                 await Contents.addContents(params.contents)
                 new Result('创建成功').success(ctx)
