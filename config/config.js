@@ -1,7 +1,7 @@
 const isDev = process.env.NODE_ENV !== 'production'
 
 const envDir = isDev => {
-    return isDev ? '/Users/zhangwenbo' : '/root'
+    return isDev ? '/Users/zhangwenbo' : '/root/nginx'
 }
 
 const coverUrl = isDev => {
