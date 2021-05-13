@@ -9,7 +9,7 @@ const coverUrl = isDev => {
 }
 
 const newCoverUrl = isDev => {
-    return isDev ? 'http://localhost:8089' : 'http://wbhy.xyz'
+    return isDev ? 'http://localhost:8089' : 'http://60.205.207.86'
 }
 
 module.exports = {
