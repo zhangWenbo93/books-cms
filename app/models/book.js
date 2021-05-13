@@ -76,6 +76,8 @@ class Book extends Model {
 
     // 文件删除
     static async delBook(data) {
+        // 删除文件所在文件夹
+        reset(data)
         if (data.fileName) {
             const book = await Book.destroy({
                 where: {
@@ -87,10 +89,6 @@ class Book extends Model {
                     fileName: data.fileName
                 }
             })
-            // 删除文件所在文件夹
-            if (book && contents) {
-                reset(data)
-            }
             return book && contents
         }
     }
