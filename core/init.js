@@ -8,6 +8,7 @@ class InitManager {
         InitManager.app = app
         InitManager.initLoadRouter()
         InitManager.initLoadError()
+        InitManager.initCors()
     }
 
     static initLoadRouter() {
