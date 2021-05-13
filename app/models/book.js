@@ -89,7 +89,7 @@ class Book extends Model {
                     fileName: data.fileName
                 }
             })
-            return book && contents
+            return book || contents
         }
     }
 
