@@ -8,6 +8,10 @@ const coverUrl = isDev => {
     return isDev ? 'https://book.youbaobao.xyz/book/res/img' : 'https://book.youbaobao.xyz/admin-upload'
 }
 
+const newCoverUrl = isDev => {
+    return isDev ? 'http://localhost:8089' : 'http://wbhy.xyz'
+}
+
 module.exports = {
     databases: {
         dbName: 'books-cms',
@@ -25,7 +29,7 @@ module.exports = {
     },
     uploadDir: {
         uploadPath: `${envDir(isDev)}/upload/admin-upload-ebook`,
-        uploadUrl: 'http://localhost:8089/admin-upload-ebook',
+        uploadUrl: `${newCoverUrl(isDev)}/admin-upload-ebook`,
         oldUploadUrl: coverUrl(isDev)
     }
 }
