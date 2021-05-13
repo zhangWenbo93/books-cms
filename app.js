@@ -2,6 +2,7 @@ require('module-alias/register')
 const path = require('path')
 const Koa = require('koa')
 const KoaBody = require('koa-body')
+const cors = require('koa2-cors')
 const KoaStatic = require('koa-static')
 const InitManager = require('@core/init')
 const catchError = require('@middlewares/exception')
@@ -13,6 +14,7 @@ const host = isDev ? '0.0.0.0' : process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || '3003'
 
 app.use(catchError)
+app.use(cors())
 app.use(
     KoaBody({
         multipart: true,
