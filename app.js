@@ -9,9 +9,8 @@ const catchError = require('@middlewares/exception')
 const { uploadDir: { uploadPath } } = require('@config')
 
 const app = new Koa()
-const isDev = process.env.NODE_ENV === 'production'
-const host = isDev ? '0.0.0.0' : process.env.HOST || '127.0.0.1'
-const port = process.env.PORT || '3003'
+const host = '0.0.0.0'
+const port = '3003'
 
 app.use(catchError)
 app.use(cors())
